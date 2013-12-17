@@ -1,17 +1,14 @@
 /*====================================================================
  * Description: 
- * DATE: 2013/10/17
+ * DATE: 2013/12/17
  * Modify:
  * Conclusion:
 ===================================================================*/
 /* include */
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
-#include <stdio.h>  
-#include <time.h>  
-#include <sys/time.h>  
-#include <stdlib.h>  
-#include <signal.h>
-
 
 /* Macro definition */
 #define false           0
