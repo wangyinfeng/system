@@ -76,6 +76,9 @@ main(int argc, char **argv)
     else {
         count+=100;
         printf("count+100 in parent process %d(PPID %d) is %d\n", getpid(), getppid(), count);
+	/* if the parent process exit earlier than the child process, the child process
+	*  will be orphan and it's paraent's process id will be the init(1). 
+	*  that's why need wait() or waitpid() here. */
         wait(NULL);
     }
 
