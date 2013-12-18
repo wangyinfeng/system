@@ -1,7 +1,7 @@
 /*====================================================================
  * Description: know pthread
  * DATE: 2013/12/17
- * Modify:
+ * Modify: 2013/12/18 - getpid(), getppid(), the process not share the data
  * Conclusion:
 ===================================================================*/
 /* include */
@@ -23,26 +23,30 @@
 * It is canceled (see pthread_cancel()).
 * Any of the threads in the process calls exit(), or the main thread performs a return from main(). This causes the termination of all threads in the process.
 */
+
+int count;
+
 void *func_1(void* args)  
-{  
-    while(1){  
-        sleep(1);  
-        printf("this is func_1!\n");  
-    }  
+{
+    sleep(1);
+    count++;
+    printf("this is func_1, count %d!\n",count);
 }
   
 void *func_2(void* args)  
 {
-    sleep(2);
-    printf("this is func_2!\n");  
+    sleep(1);
+    count++;
+    printf("this is func_2!, count %d\n", count);  
     pthread_exit(NULL);
 }
-
+  
 int
 main(int argc, char **argv)
 {
     /* A thread may either be joinable or detached */
     pthread_t pid1, pid2;  
+    pid_t pid;
 
     /* int pthread_create(pthread_t *thread,    -pthread_id
      *                    const pthread_attr_t *attr, -attribute
@@ -62,9 +66,20 @@ main(int argc, char **argv)
 //    while(1){
 //        sleep(3);
 //    }
-    pthread_join(pid2, NULL); /* wait for the thread 2 exit */
-    printf("end of main\n");
+    pthread_join(pid2, NULL);
 
+    if ((pid=fork()) == 0) {
+        sleep(1);
+        count++;
+        printf("count in child process %d(PPID %d) is %d\n", getpid(), getppid(), count);
+    }
+    else {
+        count+=100;
+        printf("count+100 in parent process %d(PPID %d) is %d\n", getpid(), getppid(), count);
+        wait(NULL);
+    }
+
+    printf("Process %d end of main\n", getpid());
     return 0;
 }
 
