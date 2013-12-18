@@ -2,6 +2,7 @@
  * Description: know pthread
  * DATE: 2013/12/17
  * Modify: 2013/12/18 - getpid(), getppid(), the process not share the data
+ *                    - mutex
  * Conclusion:
 ===================================================================*/
 /* include */
@@ -24,21 +25,31 @@
 * Any of the threads in the process calls exit(), or the main thread performs a return from main(). This causes the termination of all threads in the process.
 */
 
-int count;
+static int count;
+//pthread_mutex_t mutex;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *func_1(void* args)  
 {
-    sleep(1);
-    count++;
-    printf("this is func_1, count %d!\n",count);
+    while(1){ 
+        pthread_mutex_lock(&mutex);
+        sleep(1);
+        count++;
+        printf("this is func_1, count %d!\n",count);
+        pthread_mutex_unlock(&mutex);
+    }
 }
   
 void *func_2(void* args)  
 {
-    sleep(1);
-    count++;
-    printf("this is func_2!, count %d\n", count);  
-    pthread_exit(NULL);
+    while(1){
+        pthread_mutex_lock(&mutex);
+        sleep(1);
+        count++;
+        printf("this is func_2!, count %d\n", count);  
+        pthread_mutex_unlock(&mutex);
+//        pthread_exit(NULL);
+    }
 }
   
 int
@@ -47,6 +58,7 @@ main(int argc, char **argv)
     /* A thread may either be joinable or detached */
     pthread_t pid1, pid2;  
     pid_t pid;
+    //pthread_mutex_init(&mutex, NULL);
 
     /* int pthread_create(pthread_t *thread,    -pthread_id
      *                    const pthread_attr_t *attr, -attribute
@@ -63,9 +75,10 @@ main(int argc, char **argv)
         return -1;
     }
 
-//    while(1){
-//        sleep(3);
-//    }
+    while(1){
+        sleep(3);
+    }
+
     pthread_join(pid2, NULL);
 
     if ((pid=fork()) == 0) {
@@ -76,9 +89,9 @@ main(int argc, char **argv)
     else {
         count+=100;
         printf("count+100 in parent process %d(PPID %d) is %d\n", getpid(), getppid(), count);
-	/* if the parent process exit earlier than the child process, the child process
-	*  will be orphan and it's paraent's process id will be the init(1). 
-	*  that's why need wait() or waitpid() here. */
+    /* if the parent process exit earlier than the child process, the child process
+    *  will be orphan and it's paraent's process id will be the init(1). 
+    *  that's why need wait() or waitpid() here. */
         wait(NULL);
     }
 
