@@ -60,11 +60,18 @@ void new_start(void)
     printf("%s\n", __func__);
 }
 
+/* #4 use atexit() */ 
+void func_exit()
+{
+    printf("%s\n", __func__);
+}
+
 int
 main(int argc, char **argv)
 {
 
     printf("%s\n", __func__);
+    atexit(func_exit);
     return 0;
 }
 
