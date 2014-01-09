@@ -15,9 +15,10 @@
 #define false           0
 #define true            1
 /* GCC extension */
-/* constructor/destructor has prority, for the constructor run the the lower number first.
+/* #1 constructor/destructor has prority, for the constructor run the the lower number first.
  * for the destructor run the higher number first */
 /* constructor priorities from 0 to 100 are reserved for the implementation */
+/* the constructor function locate in .ctors and the destructor function locate in .dtors */
 void __attribute__((constructor(101))) init_func_1(void)
 {
     printf("%s\n", __func__);
@@ -35,7 +36,23 @@ void __attribute__((destructor(102))) finit_func_2(void)
     printf("%s\n", __func__);
 }
 
-/* another way is specify the entry with gcc '-e' option,
+/* #2 Put function in .init and .finit section */
+int hello_init()
+{
+    __asm__ (".section .init \n call hello_init \n .section .text\n");
+    printf("init hello\n");
+    return 0;
+}
+
+int hello_finit()
+{
+    __asm__ (".section .finit \n call hello_finit \n .section .text\n");
+    printf("finit hello\n"); /* not see finit hello... */
+    return 0;
+}
+
+
+/* #3 another way is specify the entry with gcc '-e' option,
  * to replace the default entry _start */
 /* Got segmentation fault after new_start */
 void new_start(void)
