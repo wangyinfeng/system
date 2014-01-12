@@ -36,6 +36,14 @@ void __attribute__((destructor(102))) finit_func_2(void)
     printf("%s\n", __func__);
 }
 
+/* #1.1 one more way to add in constructor section */
+typedef void(*ctor_t)(void);
+void ctor_init(void)
+{
+    printf("%s\n", __func__);
+}
+ctor_t __attribute__((section(".ctors"))) ctor_init_p = &ctor_init;
+
 /* #2 Put function in .init and .finit section */
 int hello_init()
 {
@@ -70,8 +78,8 @@ int
 main(int argc, char **argv)
 {
 
-    printf("%s\n", __func__);
     atexit(func_exit);
+    printf("%s\n", __func__);
     return 0;
 }
 
