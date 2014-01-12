@@ -1,5 +1,15 @@
 /*====================================================================
  * Description: The usage of the setjmp/longjmp
+ * setjmp saves the current environment (i.e., the program state) at some 
+ * point of program execution, into a platform-specific data structure (jmp_buf) 
+ * which can be used, at some later point of program execution, by longjmp to 
+ * restore the program state to that which was saved by setjmp into jmp_buf. 
+ * This process can be imagined to be a "jump" back to the point of program 
+ * execution where setjmp saved the environment. The (apparent) return value 
+ * from setjmp indicates whether control reached that point normally or 
+ * from a call to longjmp. This leads to a common idiom: 
+ * if( setjmp(x) ){ handle longjmp(x) }
+ *
  * DATE: 2014/01/09
  * Modify:
  * Conclusion: Not understand the following code yet
@@ -17,7 +27,21 @@
 #define false           0
 #define true            1
 
-jmp_buf b;
+jmp_buf b; 
+/* jmp_buf 
+ * - An array type, holding the information needed to restore a calling enviroment. 
+ *
+ * int setjmp(jmp_buf env)
+ * - Sets up the local jmp_buf buffer and initializes it for the jump. 
+ * This routine[1] saves the program's calling environment in the environment 
+ * buffer specified by the env argument for later use by longjmp. 
+ * If the return is from a direct invocation, setjmp returns 0. 
+ * If the return is from a call to longjmp, setjmp returns a nonzero value. 
+ * 
+ * void longjmp(jmp_buf env, int value)
+ * - Restores the context of the environment buffer env that was saved by 
+ * invocation of the setjmp routine[1] in the same invocation of the program.
+ * */
 void f()
 {
     longjmp(b,1);
@@ -35,6 +59,34 @@ main(int argc, char **argv)
     }
     return 0;
 }
+#if 0 // a more clear example
+static jmp_buf buf;
+ 
+void second(void) {
+    printf("second\n");         // prints
+    longjmp(buf,1);             // jumps back to where setjmp was called - making setjmp now return 1
+}
+ 
+void first(void) {
+    second();
+    printf("first\n");          // does not print
+}
+ 
+int main() {   
+    if ( ! setjmp(buf) ) {
+        first();                // when executed, setjmp returns 0
+    } else {                    // when longjmp jumps back, setjmp returns 1
+        printf("main\n");       // prints
+    }
+ 
+    return 0;
+}
+
+output:
+second
+main
+
+#endif
 
 #if 0
 00000000004005a4 <f>:
