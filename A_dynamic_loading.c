@@ -1,5 +1,6 @@
 /*====================================================================
  * Description: use dlopen/dlsym/dlclose/dlerror to dynamic load a lib
+ *		Compile with -ldl
  * DATE: 2014/03/13
  * Modify:
  * Conclusion:
