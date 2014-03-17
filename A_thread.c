@@ -4,6 +4,11 @@
  * DATE: 2014/03/17
  * Modify:
  * TODO: How to return complex value from the thread, such as a structure
+ * - pthread_join(pthread_t thread, void **retval) copies the exit status 
+ * of the target thread (i.e., the value that the target thread supplied to 
+ * pthread_exit(3)) into the location pointed to by *retval.
+ * So the return value for the pthread_join is just the exit code, not
+ * intend to return something complex?
  * Conclusion:
 ===================================================================*/
 /* include */
