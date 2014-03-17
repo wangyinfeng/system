@@ -67,8 +67,10 @@ main(int argc, char *argv[])
     pthread_create(&thread_count, NULL, &count_x, &p_to_count);
 
 //    pthread_join(thread_put, NULL);
-    pthread_join(thread_put,(void*)&put_return[0]);
-    pthread_join(thread_count, (void*)&count_return);
+    if (!pthread_equal(pthread_self(), thread_put))
+        pthread_join(thread_put,(void*)&put_return[0]);
+    if (!pthread_equal(pthread_self(), thread_count))
+        pthread_join(thread_count, (void*)&count_return);
 
     fprintf(stdout, "\nReturn value of put thread is %c\n", &put_return[0]);
     fprintf(stdout, "\nReturn value of count thread is %d\n", count_return);
