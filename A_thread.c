@@ -22,6 +22,8 @@
 #define false           0
 #define true            1
 
+pthread_attr_t attr;
+
 typedef struct parment{
     int count;
     char c;
@@ -48,21 +50,43 @@ void *count_x(void *argv)
     return (void*)i;
 }
 
+void *detach_thread(void *argv)
+{
+    int i;
+    Parment *p = (Parment*)argv;
+    printf("I'm detached thread\n");
+    for (i=0; i<p->count; i++){
+        sleep(1);
+        fputc(p->c, stderr);
+    }
+    printf("I'm living longer than the main, am I still alive?\n");
+}
+
 int
 main(int argc, char *argv[])
 {
     pthread_t thread_put;
     pthread_t thread_count;
+    pthread_t thread_detach;
     Parment p_to_put;
     Parment p_to_count;
+    Parment p_to_detach;
     char put_return[100];
     int count_return;
 
     p_to_put.count = 3;
     p_to_put.c = 'A';
 
+    p_to_detach.count = 5;
+    p_to_detach.c = 'X';
+
     p_to_count.c = 5;
 
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    pthread_create(&thread_detach, &attr, &detach_thread, &p_to_detach);
+
+    /* by default is joinable thread */
     pthread_create(&thread_put, NULL, &put_x, &p_to_put);
     pthread_create(&thread_count, NULL, &count_x, &p_to_count);
 
@@ -72,8 +96,10 @@ main(int argc, char *argv[])
     if (!pthread_equal(pthread_self(), thread_count))
         pthread_join(thread_count, (void*)&count_return);
 
+
     fprintf(stdout, "\nReturn value of put thread is %c\n", &put_return[0]);
     fprintf(stdout, "\nReturn value of count thread is %d\n", count_return);
-    fprintf(stdout, "End of main\n");
+    fprintf(stdout, "My pid %d\nEnd of main\n", getpid());
     return 0;
 }
+
