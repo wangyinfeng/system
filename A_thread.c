@@ -85,6 +85,8 @@ main(int argc, char *argv[])
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     pthread_create(&thread_detach, &attr, &detach_thread, &p_to_detach);
+    /* no need to keep the attribute after create the thread */
+    pthread_attr_destroy(&attr);
 
     /* by default is joinable thread */
     pthread_create(&thread_put, NULL, &put_x, &p_to_put);
