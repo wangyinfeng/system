@@ -5,6 +5,7 @@
  * Conclusion:
 ===================================================================*/
 /* include */
+#include <assert.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
