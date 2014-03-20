@@ -1,5 +1,5 @@
 /*====================================================================
- * Description: TBD. Implement the code at page 108.
+ * Description: Implement the code at page 108.
  * - linked list, manage the job queue
  *   WTF, need to understand this basic data structure completely!!!
  * - mutex, protect the job queue operation
