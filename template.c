@@ -4,15 +4,17 @@
  * Modify:
  * Conclusion:
 ===================================================================*/
-/* include */
+/* includes */
 #include <assert.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <sys/stat.h>
+#include <sys/shm.h>
 
-/* Macro definition */
+/* Macros */
 #define false           0
 #define true            1
 
