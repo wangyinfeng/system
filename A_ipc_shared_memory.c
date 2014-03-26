@@ -7,6 +7,11 @@
  *   what if the shared memory is created after fork? 
  * - Processes must coordinate access to the shared memory, need 
  *   semaphore's help
+ *   - there are two kinds of semaphores, counting semaphore and 
+ *   binary semaphore. For the semaphore get by semget(), is binary
+ *   semaphore, cannot be used by sem_wait() and sem_post(), and 
+ *   should be initialized by its own way.
+ *   TODO:Implement the binary semaphore at the page 126.
 ===================================================================*/
 /* includes */
 #include <assert.h>
