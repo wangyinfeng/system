@@ -3,10 +3,12 @@
  * DATE: 2014/03/26
  * Modify:
  * Conclusion:
- * By this example, the shared memory is created before fork, but 
- * what if the shared memory is created after fork? 
+ * - By this example, the shared memory is created before fork, but 
+ *   what if the shared memory is created after fork? 
+ * - Processes must coordinate access to the shared memory, need 
+ *   semaphore's help
 ===================================================================*/
-/* include */
+/* includes */
 #include <assert.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -15,6 +17,9 @@
 #include <pthread.h>
 #include <sys/shm.h>
 #include <sys/stat.h>
+#include <sys/sem.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
 
 /* Macro definition */
 #define false           0
