@@ -38,6 +38,7 @@ main(int argc, char **argv)
     int buffer_size;
     char* addr_size_str;
     char addr_size;
+    double up_time, idle_time;
 
     fp = fopen("/proc/cpuinfo", "r");
     buffer_size = fread(buffer, 1, sizeof(buffer), fp);
@@ -45,6 +46,8 @@ main(int argc, char **argv)
         fprintf(stderr, "Read info from cpuinfo failed\n");
         return 1;
     }
+    fclose(fp);
+
     addr_size_str = strstr(buffer, ADDR_STR);
     if (addr_size_str == NULL) {
         fprintf(stderr, "There are no string %s\n", ADDR_STR);
@@ -52,6 +55,19 @@ main(int argc, char **argv)
     }
     sscanf(addr_size_str, "cache_alignment : %d", &addr_size);
     printf("Parse the cpuinfo and get the cpu address is : %d\n", addr_size);
+
+    /* convert the uptime to readable */
+    fp = fopen("/proc/uptime", "r");
+    /* The way to get the output of the command */
+    /* no matter how many spaces between the %lf, will get the correct value.
+     * What if want to get the number in the output like: "A 123, B 456"? */
+    fscanf(fp, "%lf %lf", &up_time, &idle_time); 
+    fclose(fp);
+    printf("System up time: %d Day:%d Hour:%d Min:%d Sec, idle time %f\n",
+            (long)up_time/24/60/60, 
+            (long)up_time/60/60%24, 
+            (long)up_time/60%60, 
+            (long)up_time%60, idle_time);
 
     return 0;
 }
