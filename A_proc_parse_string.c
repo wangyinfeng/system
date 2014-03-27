@@ -30,6 +30,31 @@
 
 #define ADDR_STR    "cache_alignment" 
 
+void
+print_argument(pid_t pid)
+{
+}
+
+void
+print_environment(pid_t pid)
+{
+}
+
+void
+print_exec_path(pid_t pid)
+{
+}
+
+void
+print_cpu_info(pid_t pid)
+{
+}
+
+void
+print_up_time(pid_t pid)
+{
+}
+
 int
 main(int argc, char **argv)
 {
