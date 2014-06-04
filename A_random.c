@@ -13,6 +13,7 @@
 #include <pthread.h>
 #include <sys/stat.h>
 #include <sys/shm.h>
+#include <fcntl.h>
 
 /* Macros */
 #define false           0
